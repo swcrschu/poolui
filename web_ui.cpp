@@ -59,8 +59,18 @@ WebUIApplication::WebUIApplication(const WEnvironment& env)
   main_container->addWidget( pb );
 
   pb->clicked().connect( std::bind( [=] () {
-	system( "ssh root@iscsi-test.rz.uni-greifswald.de 'date >/tmp/date.txt'");	  
-      }
+    FILE *in;
+    char buff[512];
+      
+	if(!(in = popen("ls -sail", "r"))){
+        return 1;
+	  }
+	    while(fgets(buff, sizeof(buff), in)!=NULL){
+	        cout << buff;
+		  }
+		    pclose(in);
+		    return 0;
+	}
   ));
 
 

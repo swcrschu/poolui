@@ -38,7 +38,7 @@ private:
 WebUIApplication::WebUIApplication(const WEnvironment& env)
   : WApplication(env)
 {
-  setTitle("PIC WebUI");                               // application title
+  setTitle("poolui");                               // application title
   Wt::WBootstrapTheme *bootstrapTheme = new Wt::WBootstrapTheme(this);
   bootstrapTheme->setVersion(Wt::WBootstrapTheme::Version3);
   bootstrapTheme->setResponsive(true);
@@ -59,7 +59,7 @@ WebUIApplication::WebUIApplication(const WEnvironment& env)
   main_container->addWidget( pb );
 
   pb->clicked().connect( std::bind( [=] () {
-	system( "asdasdasd");	  
+	system( "ssh root@iscsi-test.rz.uni-greifswald.de 'date >/tmp/date.txt'");	  
       }
   ));
 

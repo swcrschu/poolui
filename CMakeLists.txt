@@ -1,0 +1,24 @@
+# CMake likes us to put this here in case someone tries to read this file with an older version of cmake
+cmake_minimum_required(VERSION 2.8) # http://www.cmake.org/cmake/help/cmake-2-8-docs.html#command:cmake_minimum_required
+
+project ("web_ui_extension")
+
+SET( CMAKE_CXX_FLAGS "-D_GLIBCXX_USE_CXX11_ABI=0 -std=c++14" )
+SET( CMAKE_EXPORT_COMPILE_COMMANDS on )
+
+# Other Libraries
+find_package( Boost COMPONENTS system thread signals)
+find_library( wt wt)
+find_library( wthttp wthttp)
+
+add_library( web_ui SHARED web_ui.cpp )
+
+
+target_link_libraries( web_ui
+		      ${Boost_SYSTEM_LIBRARY} ${Boost_THREAD_LIBRARY} ${Boost_SIGNALS_LIBRARY}
+		      wt wthttp)
+
+
+add_executable( bin_example main.cpp )
+
+target_link_libraries( bin_example web_ui )

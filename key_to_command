@@ -1,0 +1,4 @@
+# config file
+date	      uptime 
+
+list	      ls -alh

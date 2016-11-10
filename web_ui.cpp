@@ -47,7 +47,6 @@ class WebUIApplication : public WApplication {
   WLineEdit *nameEdit_;
   WTextArea *ta_command_output;
   std::map<string, string> key_to_command;  // key value map command file key_to_command
-  std::vector<string> keys ;
 
   void GetCommandoutput(std::string, WTextArea *);  // read command output line
   void read_input_file(std::string filename);       //
@@ -98,11 +97,12 @@ WebUIApplication::WebUIApplication(const WEnvironment &env)
   root()->addWidget(contenContainer);
 
   // button
-  Wt::WPushButton *pb1 = new Wt::WPushButton("hier soll nur der key aus dem vector rein" );
+  Wt::WPushButton *pb1 = new Wt::WPushButton("uptime");
   root()->addWidget(pb1);
   
-  Wt::WPushButton *pb2 = new Wt::WPushButton(key_to_command["ip-add"]);
-
+  Wt::WPushButton *pb2 = new Wt::WPushButton("ip-add");
+  root()->addWidget(pb2);
+  
   ta_command_output = new WTextArea();
   root()->addWidget(ta_command_output);
 
@@ -151,14 +151,8 @@ void WebUIApplication::GetCommandoutput(std::string command,
   while (fgets(buff, sizeof(buff), in) != NULL) {
     std::string line(&buff[0]);
     text += line;
-
-    //	cout << buff ;
   }
   pclose(in);
-//test output vector keys    
-  for (string n : keys){
-      std::cout << n << std::endl;
-  }
   std::cout << "text_area ptr " << text_area << std::endl;
   text_area->setText(text);
   return;
@@ -187,7 +181,7 @@ void WebUIApplication::read_input_file(std::string filename) {
   // test output line_stream
   // store only the key's for buttontext
   for (auto &&element : key_to_command) {
-    keys.push_back(element.first);
+    std::cout << element.first << " " << element.second << endl;
   }
       
   }

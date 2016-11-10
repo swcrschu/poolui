@@ -1,4 +1,5 @@
 # config file
-date	      uptime 
-
+date	      date
+uptime	      uptime
 list	      ls -alh
+ip-add	      ip -o -4 addr show | awk -F '[ /]+' '/global/ {print $4}'

@@ -4,7 +4,6 @@
  * See the LICENSE file for terms of use.
  */
 
-<<<<<<< HEAD
 #include <Wt/WAnchor>
 #include <Wt/WApplication>
 #include <Wt/WBootstrapTheme>
@@ -18,36 +17,15 @@
 #include <Wt/WNavigationBar>
 #include <Wt/WPopupMenu>
 #include <Wt/WPopupMenuItem>
-=======
 
-#include "web_ui.h"
-#include <map>
-#include <Wt/WBootstrapTheme>
-#include <Wt/WMenu>
-#include <Wt/WStackedWidget>
-#include <Wt/WMessageBox>
-#include <Wt/WNavigationBar>
-#include <Wt/WPopupMenu>
-#include <Wt/WPopupMenuItem>
-#include <Wt/WContainerWidget>
-#include <Wt/WAnchor>
-#include <Wt/WLineEdit>
-#include <Wt/WLink>
-#include <Wt/WText>
-#include <Wt/WTextArea>
->>>>>>> fcde08f68468151a2ff40e163e01b38ee4554ef1
 #include <Wt/WPushButton>
 #include <Wt/WServer>
-<<<<<<< HEAD
 #include <Wt/WStackedWidget>
 #include <Wt/WTemplate>
 #include <Wt/WText>
 #include <Wt/WTextArea>
 #include <future>
 #include <algorithm>
-=======
-#include <Wt/WHBoxLayout>
->>>>>>> fcde08f68468151a2ff40e163e01b38ee4554ef1
 #include <iostream>
 #include <map>
 #include <sstream>
@@ -120,21 +98,19 @@ WebUIApplication::WebUIApplication(const WEnvironment &env)
  navigation->setTitle("URZ", "http://www.rz.uni-greifswald.de");
  navigation->setResponsive(true);
 
+ // output WText menuItem
+ Wt::WStackedWidget *contentsStack = new Wt::WStackedWidget();
+ root()->addWidget(contentsStack);
+ contentsStack->addStyleClass("contents");
 
-// output WText menuItem
-  Wt::WStackedWidget *contentsStack = new Wt::WStackedWidget();
-  root()->addWidget(contentsStack);
-  contentsStack->addStyleClass("contents");
+ // Setup a Left-aligned
+ Wt::WMenu *leftMenu = new Wt::WMenu(contentsStack, menuContainer);
+ navigation->addMenu(leftMenu);
 
-// Setup a Left-aligned
-  Wt::WMenu *leftMenu = new Wt::WMenu(contentsStack, menuContainer);
-  navigation->addMenu(leftMenu);
-
-  leftMenu->addItem("rollout", content_tab1());
-  leftMenu->addItem("administration",content_tab2());
-  leftMenu->addItem("monitoring", content_tab3());
-  leftMenu->addItem("edit", content_tab4());
-
+ leftMenu->addItem("rollout", content_tab1());
+ leftMenu->addItem("administration", content_tab2());
+ leftMenu->addItem("monitoring", content_tab3());
+ leftMenu->addItem("edit", content_tab4());
 }
 //content for a single menu
 Wt::WWidget* WebUIApplication::content_tab1(){

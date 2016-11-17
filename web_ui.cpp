@@ -12,6 +12,7 @@
 #include <Wt/WLineEdit>
 #include <Wt/WLink>
 #include <Wt/WMenu>
+#include <Wt/WTabWidget>
 #include <Wt/WMessageBox>
 #include <Wt/WNavigationBar>
 #include <Wt/WPopupMenu>
@@ -42,105 +43,153 @@ class WebUIApplication : public WApplication {
   WebUIApplication(const WEnvironment &env);
 
  private:
-  // define class
 
-  WLineEdit *nameEdit_;
+// Menue
+  Wt::WWidget *content_tab1();
+  Wt::WWidget *content_tab2();
+  Wt::WWidget *content_tab3();
+  Wt::WWidget *content_tab4();
+//Comand-Output  
   WTextArea *ta_command_output;
-  std::map<string, string> key_to_command;  // key value map command file key_to_command
+// key value map command file key_to_command
+  std::map<string, string> key_to_command;
 
-  void GetCommandoutput(std::string, WTextArea *);  // read command output line
-  void read_input_file(std::string filename);       //
+// read command output line
+  void get_command_output(std::string, WTextArea *);
+  void read_input_file(std::string filename);    
+// use for update_lock and triggerUpdate (Button)
+  void fire_and_forget( std::function<void()> f ); 
 };
 
 WebUIApplication::WebUIApplication(const WEnvironment &env)
     : WApplication(env) {
-  setTitle("poolui");  // application title
+      setTitle("poolui");
 
-  // css
+// css
   Wt::WBootstrapTheme *bootstrapTheme = new Wt::WBootstrapTheme(this);
   bootstrapTheme->setVersion(Wt::WBootstrapTheme::Version3);
   bootstrapTheme->setResponsive(true);
   setTheme(bootstrapTheme);
   useStyleSheet("resources/themes/bootstrap/3/bootstrap-theme.min.css");
 
-  // needed to load the templates for the objects and make the bootstrap theme
-  // work
+// needed to load the templates for the objects and make the bootstrap theme  work
   this->messageResourceBundle().use(this->appRoot() + "text");
 
-  // to enable threading for the main event loop
+// to enable threading for the main event loop
   this->enableUpdates(true);
 
-  // Config file key_to_command read
+// Config file key_to_command read
   read_input_file("key_to_command");
-  // menuContainer + menu
+
+// menuContainer + menu
   Wt::WContainerWidget *menuContainer = new Wt::WContainerWidget();
   root()->addWidget(menuContainer);
 
-  Wt::WNavigationBar *navigation = new Wt::WNavigationBar(menuContainer);
-  navigation->setTitle("Link", "http://www.google.com/search?q=corpy+inc");
-  navigation->setResponsive(true);
+// at the moment not use, because Tabs doesn't support responsive design
+//  Wt::WTabWidget *menuTabConatiner = new Wt::WTabWidget();
+//  root()->addWidget(menuTabConatiner);
+//  menuTabConatiner->addTab(content_tab1(),"rollout", Wt::WTabWidget::PreLoading);
+//  menuTabConatiner->addTab(content_tab2(),"administration", Wt::WTabWidget::PreLoading)->setStyleClass("trhead");
+//  menuTabConatiner->addTab(content_tab3(),"monitoring");
+//  menuTabConatiner->addTab(content_tab4(),"edit");
 
-  // output WText menuItem
-  Wt::WStackedWidget *contentsStack = new Wt::WStackedWidget(menuContainer);
+ Wt::WNavigationBar *navigation = new Wt::WNavigationBar(menuContainer);
+ navigation->setTitle("URZ", "http://www.rz.uni-greifswald.de");
+ navigation->setResponsive(true);
+
+
+// output WText menuItem
+  Wt::WStackedWidget *contentsStack = new Wt::WStackedWidget();
+  root()->addWidget(contentsStack);
   contentsStack->addStyleClass("contents");
 
-  // Setup a Left-aligned
+// Setup a Left-aligned
   Wt::WMenu *leftMenu = new Wt::WMenu(contentsStack, menuContainer);
   navigation->addMenu(leftMenu);
 
-  leftMenu->addItem("Home", new Wt::WText("alternative Text"));
-  leftMenu->addItem("link2", new Wt::WText("link2"));
-  leftMenu->addItem("link3", new Wt::WText("link3"));
+  leftMenu->addItem("rollout", content_tab1());
+  leftMenu->addItem("administration",content_tab2());
+  leftMenu->addItem("monitoring", content_tab3());
+  leftMenu->addItem("edit", content_tab4());
 
-  // contentContainer + content
-  Wt::WContainerWidget *contenContainer = new Wt::WContainerWidget();
-  root()->addWidget(contenContainer);
+}
+//content for a single menu
+Wt::WWidget* WebUIApplication::content_tab1(){
+  Wt::WContainerWidget *contentTab = new Wt::WContainerWidget(); 
 
-  // button
+  Wt::WText *text = new Wt::WText("Hier entsteht der Inhalt für saemtliche Rollout Transaktionen");
+  contentTab->addWidget(text);  
+
+  return contentTab;
+}
+
+Wt::WWidget* WebUIApplication::content_tab2(){
+  Wt::WContainerWidget *contentTab = new Wt::WContainerWidget();
+//only for bootstrap grid      
+  Wt::WContainerWidget *container = new Wt::WContainerWidget();
+  container->addStyleClass("container-fluid");
+  contentTab->addWidget(container);
+  Wt::WContainerWidget *row = new Wt::WContainerWidget();
+  row->addStyleClass("row");
+  container->addWidget(row);
+// button
   Wt::WPushButton *pb1 = new Wt::WPushButton("uptime");
-  root()->addWidget(pb1);
+ row->addWidget(pb1);
   
   Wt::WPushButton *pb2 = new Wt::WPushButton("ip-add");
-  root()->addWidget(pb2);
-  
-  ta_command_output = new WTextArea();
-  root()->addWidget(ta_command_output);
+ row->addWidget(pb2);
 
-  std::cout << "text_area ptr " << ta_command_output << std::endl;
 
-  // action button key + place textArea commad_output
+// action button
   pb1->clicked().connect(std::bind([=]() {
-
-    std::thread([=]() {
-      // getting update lock
-      auto update_lock = this->getUpdateLock();
-      // got update lock
-      //    std::cout << "from thread: " << std::this_thread::get_id() << endl;
-      GetCommandoutput(key_to_command["uptime"], ta_command_output);
-      // push the changes to the browser
-      this->triggerUpdate();
-    }).detach();
-
+      fire_and_forget(
+	  [=](){
+	  get_command_output(key_to_command["uptime"], ta_command_output);
+	  }
+	);
   }));
+  
   pb2->clicked().connect(std::bind([=]() {
-    std::thread([=]() {
-      auto update_lock = this->getUpdateLock();
-      GetCommandoutput(key_to_command["ip-add"], ta_command_output);
-      this->triggerUpdate();
-    }).detach();
+    fire_and_forget(
+      [=]() {
+      get_command_output(key_to_command["ip-add"], ta_command_output);
+      }
+     );
+  }));
+  
 
-  }
+      ta_command_output = new WTextArea();
+      contentTab->addWidget(ta_command_output); 
+      return contentTab;
+}
 
-				   ));
+Wt::WWidget* WebUIApplication::content_tab3(){
+  Wt::WContainerWidget *contentTab = new Wt::WContainerWidget();
+      
+      Wt::WText *text = new Wt::WText("Hier entsteht der Inhalt für die allgemeine Administration");
+      contentTab->addWidget(text);
+
+    
+      return contentTab;
+}
+
+Wt::WWidget* WebUIApplication::content_tab4(){
+  Wt::WContainerWidget *contentTab = new Wt::WContainerWidget();
+      
+      Wt::WText *text = new Wt::WText("Hier entsteht der Inhalt für die allgemeine Administration");
+      contentTab->addWidget(text);
+
+    
+      return contentTab;
 }
 
 // To protect common data against simultaneous access from multiple threads
 std::mutex g_GetCommandOutputMutex;
 
 // CommandLine to TextAarea
-void WebUIApplication::GetCommandoutput(std::string command,
+void WebUIApplication::get_command_output(std::string command,
 					WTextArea *text_area) {
-  // for owning a mutex or several mutexes for the duration of a scoped block
+// for owning a mutex or several mutexes for the duration of a scoped block
   std::lock_guard<std::mutex> guard(g_GetCommandOutputMutex);
   std::string text;
   FILE *in;
@@ -169,7 +218,7 @@ void WebUIApplication::read_input_file(std::string filename) {
     std::string key, value_part;
     std::string combined_value;
     line_stream >> key;
-    // ignore # and blank lines
+// ignore # and blank lines
     if (key[0] == '#' || key == "") {
       continue;
     }
@@ -178,13 +227,23 @@ void WebUIApplication::read_input_file(std::string filename) {
     }
     key_to_command[key] = combined_value;
   }
-  // test output line_stream
-  // store only the key's for buttontext
+// test output line_stream
+// store only the key's for buttontext
   for (auto &&element : key_to_command) {
     std::cout << element.first << " " << element.second << endl;
   }
       
   }
+
+//use for update_lock triggerUpdate (Button)
+void WebUIApplication::fire_and_forget( std::function<void()> f ){
+      std::thread([=](){
+// getting update lock
+      auto update_lock = this->getUpdateLock();
+          f();
+              this->triggerUpdate();
+                 }).detach();
+                   }
 
 WApplication *createApplication(const WEnvironment &env) {
   return new WebUIApplication(env);

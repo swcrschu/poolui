@@ -4,6 +4,7 @@
  * See the LICENSE file for terms of use.
  */
 
+<<<<<<< HEAD
 #include <Wt/WAnchor>
 #include <Wt/WApplication>
 #include <Wt/WBootstrapTheme>
@@ -17,14 +18,36 @@
 #include <Wt/WNavigationBar>
 #include <Wt/WPopupMenu>
 #include <Wt/WPopupMenuItem>
+=======
+
+#include "web_ui.h"
+#include <map>
+#include <Wt/WBootstrapTheme>
+#include <Wt/WMenu>
+#include <Wt/WStackedWidget>
+#include <Wt/WMessageBox>
+#include <Wt/WNavigationBar>
+#include <Wt/WPopupMenu>
+#include <Wt/WPopupMenuItem>
+#include <Wt/WContainerWidget>
+#include <Wt/WAnchor>
+#include <Wt/WLineEdit>
+#include <Wt/WLink>
+#include <Wt/WText>
+#include <Wt/WTextArea>
+>>>>>>> fcde08f68468151a2ff40e163e01b38ee4554ef1
 #include <Wt/WPushButton>
 #include <Wt/WServer>
+<<<<<<< HEAD
 #include <Wt/WStackedWidget>
 #include <Wt/WTemplate>
 #include <Wt/WText>
 #include <Wt/WTextArea>
 #include <future>
 #include <algorithm>
+=======
+#include <Wt/WHBoxLayout>
+>>>>>>> fcde08f68468151a2ff40e163e01b38ee4554ef1
 #include <iostream>
 #include <map>
 #include <sstream>
@@ -70,7 +93,7 @@ WebUIApplication::WebUIApplication(const WEnvironment &env)
   bootstrapTheme->setVersion(Wt::WBootstrapTheme::Version3);
   bootstrapTheme->setResponsive(true);
   setTheme(bootstrapTheme);
-  useStyleSheet("resources/themes/bootstrap/3/bootstrap-theme.min.css");
+  useStyleSheet("resources/themes/bootstrap/3/bootstrap-theme.min.css"); 
 
 // needed to load the templates for the objects and make the bootstrap theme  work
   this->messageResourceBundle().use(this->appRoot() + "text");
@@ -185,6 +208,7 @@ Wt::WWidget* WebUIApplication::content_tab4(){
 
 // To protect common data against simultaneous access from multiple threads
 std::mutex g_GetCommandOutputMutex;
+
 
 // CommandLine to TextAarea
 void WebUIApplication::get_command_output(std::string command,

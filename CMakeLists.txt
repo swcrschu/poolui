@@ -11,7 +11,7 @@ find_package( Boost COMPONENTS system thread signals)
 find_library( wt wt)
 find_library( wthttp wthttp)
 
-add_library( web_ui SHARED web_ui.cpp )
+add_library( web_ui SHARED web_ui.cpp CommandExecutingButton.cpp)
 
 
 target_link_libraries( web_ui

@@ -10,12 +10,14 @@
 #include <Wt/WContainerWidget>
 #include <Wt/WGridLayout>
 #include <Wt/WHBoxLayout>
+#include <Wt/WImage>
 #include <Wt/WLabel>
 #include <Wt/WLineEdit>
 #include <Wt/WLink>
 #include <Wt/WMenu>
 #include <Wt/WMessageBox>
 #include <Wt/WNavigationBar>
+#include <Wt/WPanel>
 #include <Wt/WPopupMenu>
 #include <Wt/WPopupMenuItem>
 #include <Wt/WPushButton>
@@ -26,19 +28,21 @@
 #include <Wt/WTemplate>
 #include <Wt/WText>
 #include <Wt/WTextArea>
-#include <Wt/WImage>
 #include <algorithm>
 #include <future>
 #include <iostream>
 #include <map>
 #include <sstream>
 #include <vector>
-#include "web_ui.h"
 #include "CommandExecutingButton.hpp"
 #include "utility.hpp"
+#include "web_ui.h"
+
+#include "ssh.h"
 
 using namespace Wt;
 using namespace std;
+
 // c++0x only, for std::bind
 
 class WebUIApplication : public WApplication {
@@ -46,6 +50,11 @@ class WebUIApplication : public WApplication {
   WebUIApplication(const WEnvironment &env);
 
  private:
+  // LayoutContainer
+  Wt::WWidget *content_west();
+  Wt::WWidget *content_east();
+  Wt::WWidget *content_south();
+
   // Menue
   Wt::WWidget *content_tab1();
   Wt::WWidget *content_tab2();
@@ -55,12 +64,11 @@ class WebUIApplication : public WApplication {
   Wt::WLabel *label;
   // Comand-Output Area
   Wt::WTextArea *ta_command_output;
+
   //  key value map command file key_to_command
   std::map<string, string> key_to_command;
   void read_input_file(std::string filename);
 };
-
-
 
 WebUIApplication::WebUIApplication(const WEnvironment &env)
     : WApplication(env) {
@@ -82,26 +90,12 @@ WebUIApplication::WebUIApplication(const WEnvironment &env)
 
   // Config file key_to_command read
   read_input_file("key_to_command");
-  /*
-  Wt::WContainerWidget mainContainer = new Wt::WContainerWidget();
-  mainContainer->setHeight(800);
-  maincontainer->setStyleClass("yellow-box");
-
-  Wt::WBorderLayout *layout = new Wt::WBorderLayout();
-  mainContainer->setLayout(layout);
-  layout->addWidget(new Wt::WText("West-side is best"),
-  Wt::WBorderLayout::West);
-  layout->addWidget(new Wt::WText("East-side is best"),
-  Wt::WBorderLayout::East);
-  layout->addWidget(new Wt::WText("Center"), Wt::WBorderLayout::Center);
-  mainContainer->setLayout(layout, Wt::AlignTop | Wt::AlignJustify);
-  */
+  
   Wt::WContainerWidget *mainContainer = new Wt::WContainerWidget();
   root()->addWidget(mainContainer);
-  mainContainer->setStyleClass("alert-info");
+  //  mainContainer->setStyleClass("alert-info");
 
-  Wt::WBorderLayout *layout = new Wt::WBorderLayout();
-  mainContainer->setLayout(layout);
+
 
   // Menu
   // menuContainer + menu
@@ -112,9 +106,7 @@ WebUIApplication::WebUIApplication(const WEnvironment &env)
 
   // output WText menuItem
   Wt::WStackedWidget *contentsStack = new Wt::WStackedWidget();
-  // root()->addWidget(contentsStack);
-  // contentsStack->addStyleClass("contents");
-
+  
   // Setup a Left-aligned
   Wt::WMenu *leftMenu = new Wt::WMenu(contentsStack, menuContainer);
   navigation->addMenu(leftMenu);
@@ -124,14 +116,37 @@ WebUIApplication::WebUIApplication(const WEnvironment &env)
   leftMenu->addItem("monitoring", content_tab3());
   leftMenu->addItem("edit", content_tab4());
 
-  // Borderlayout
 
+  // Borderlayout
+  Wt::WBorderLayout *layout = new Wt::WBorderLayout();
+  mainContainer->setLayout(layout);
   layout->addWidget(navigation, Wt::WBorderLayout::North);
-  layout->addWidget(new Wt::WText("West"), Wt::WBorderLayout::West);
+  layout->addWidget(content_west(), Wt::WBorderLayout::West);
   layout->addWidget(new Wt::WText("East"), Wt::WBorderLayout::East);
   // item->setStyleClass("alert-warning");
-  layout->addWidget(new Wt::WText("South"), Wt::WBorderLayout::South);
+  layout->addWidget(content_south(), Wt::WBorderLayout::South);
   layout->addWidget(contentsStack, Wt::WBorderLayout::Center);
+}
+
+
+Wt::WWidget *WebUIApplication::content_west() {
+  Wt::WContainerWidget *ContentContainer = new Wt::WContainerWidget();
+  Wt::WText *text = new Wt::WText("container west");
+  ContentContainer->addWidget(text);
+  return ContentContainer;
+}
+Wt::WWidget *WebUIApplication::content_east() {
+  Wt::WContainerWidget *ContentContainer = new Wt::WContainerWidget();
+  Wt::WText *text = new Wt::WText("east");
+  ContentContainer->addWidget(text);
+  return ContentContainer;
+}
+
+Wt::WWidget *WebUIApplication::content_south() {
+  Wt::WContainerWidget *ContentContainer = new Wt::WContainerWidget();
+  Wt::WText *text = new Wt::WText("bottom");
+  ContentContainer->addWidget(text);
+  return ContentContainer;
 }
 
 // content for a single menu
@@ -147,25 +162,30 @@ Wt::WWidget *WebUIApplication::content_tab1() {
 
 Wt::WWidget *WebUIApplication::content_tab2() {
   Wt::WContainerWidget *contentTab = new Wt::WContainerWidget();
-
+  Wt::WPanel *panel = new Wt::WPanel();
+  //panel->resize(400,400);
+  panel->setWidth(300);
+  panel->addStyleClass("centered-example");
+  panel->setTitle("Dienste");
+  panel->setCentralWidget(new Wt::WText("Methoden zum Abfragen der Dienste"));
+  contentTab->addWidget(panel); 
+  // cmd output mouseover
   label = new WLabel();
-  //cmd output mouseover
-
-//result cmd output textarea
+  // result cmd output textarea
   ta_command_output = new WTextArea();
-  
-//  Wt::WImage *image = new Wt::WImage(Wt::WLink("ducky.jpg"));
-//  image->setStyleClass("img-responsive");                                   
-//  contentTab->addWidget(image); 
+
+  //  Wt::WImage *image = new Wt::WImage(Wt::WLink("ducky.jpg"));
+  //  image->setStyleClass("img-responsive");
+  //  contentTab->addWidget(image);
   
   // neuer CommandExecutingButton
-  CommandExecutingButton *pb1 = new CommandExecutingButton("ip-add", label,key_to_command["ip-add"],ta_command_output, this);
+  CommandExecutingButton *pb1 = new CommandExecutingButton(
+      "ip-add", label, key_to_command["ip-add"], ta_command_output, this);
   contentTab->addWidget(pb1);
-  
 
-  CommandExecutingButton *pb2 = new CommandExecutingButton("ip-add", label, key_to_command["uptime"], ta_command_output, this);
+  CommandExecutingButton *pb2 = new CommandExecutingButton(
+      "uptime", label, key_to_command["uptime"], ta_command_output, this);
   contentTab->addWidget(pb2);
-   
   contentTab->addWidget(label);
   contentTab->addWidget(ta_command_output);
 
@@ -189,7 +209,6 @@ Wt::WWidget *WebUIApplication::content_tab4() {
 
   return contentTab;
 }
-
 
 // methode config file read
 void WebUIApplication::read_input_file(std::string filename) {
@@ -218,8 +237,12 @@ void WebUIApplication::read_input_file(std::string filename) {
   //}
 }
 
-
 WApplication *createApplication(const WEnvironment &env) {
+  //authenticate_with_ssh( "incubus", "muh", "141.53.32.45" );
+ // std::string answer = execute_command_with_ssh( "incubus", "141.53.32.45", "ls ~" );
+
+//  std::cout << "got answer : " << answer << std::endl;
+
   return new WebUIApplication(env);
 }
 int WebUI::run(int argc, char **argv) {

@@ -1,24 +1,15 @@
 #include "CommandExecutingButton.hpp"
 #include "utility.hpp"
+#include "ssh.h"
 
 using namespace Wt;
 //global CommandLine to TextAarea
 void get_command_output(std::string command,
 					  WTextArea *text_area) {
   // for owning a mutex or several mutexes for the duration of a scoped block
-  std::string text;
-  FILE *in;
-  char buff[512];
-  if (!(in = popen(command.c_str(), "r"))) {
-    return;
-  }
-  while (fgets(buff, sizeof(buff), in) != NULL) {
-    std::string line(&buff[0]);
-    text += line;
-  }
-  pclose(in);
-  std::cout << "text_area ptr " << text_area << std::endl;
-  text_area->setText(text);
+  std::string answer = execute_command_with_ssh( "incubus", "141.53.32.45", command.c_str() );
+  std::cout << "got answer : " << answer << std::endl;
+  text_area->setText(answer);
   return;
 }
 

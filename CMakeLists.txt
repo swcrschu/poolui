@@ -4,6 +4,7 @@ cmake_minimum_required(VERSION 2.8) # http://www.cmake.org/cmake/help/cmake-2-8-
 project ("web_ui_extension")
 
 SET( CMAKE_CXX_FLAGS "-D_GLIBCXX_USE_CXX11_ABI=0 -std=c++14" )
+SET( CMAKE_CXX_FLAGS_DEBUG ${CMAKE_CXX_FLAGS_DEBUG}  -D_GLIBCXX_DEBUG -D_GLIBCXX_DEBUG_PEDANTIC -g )
 SET( CMAKE_EXPORT_COMPILE_COMMANDS on )
 
 # Other Libraries
@@ -19,6 +20,6 @@ target_link_libraries( web_ui
 		      wt wthttp ssh2)
 
 
-		    add_executable( bin_example main.cpp SystemTab.cpp )
+		    add_executable( bin_example main.cpp SystemTab.cpp ThinclientTab.cpp MonitoringTab.cpp )
 
 target_link_libraries( bin_example web_ui )

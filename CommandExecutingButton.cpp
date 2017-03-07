@@ -6,7 +6,6 @@ using namespace Wt;
 //global CommandLine to TextAarea
 void get_command_output(std::string command,
 					  WTextArea *text_area) {
-// for owning a mutex or several mutexes for the duration of a scoped block
   std::string answer = execute_command_with_ssh( "schuldtc", "141.53.7.32", command.c_str() );
 //std::cout << "got answer : " << answer << std::endl;
   text_area->setText(answer);

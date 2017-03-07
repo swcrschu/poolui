@@ -19,6 +19,6 @@ target_link_libraries( web_ui
 		      wt wthttp ssh2)
 
 
-add_executable( bin_example main.cpp )
+		    add_executable( bin_example main.cpp SystemTab.cpp )
 
 target_link_libraries( bin_example web_ui )

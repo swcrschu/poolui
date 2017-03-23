@@ -76,7 +76,7 @@ class WebUIApplication : public WApplication {
 
 WebUIApplication::WebUIApplication(const WEnvironment &env)
     : WApplication(env) {
-  setTitle("poolui");
+      setTitle("poolui");
 
 // css
   Wt::WBootstrapTheme *bootstrapTheme = new Wt::WBootstrapTheme(this);
@@ -116,7 +116,6 @@ WebUIApplication::WebUIApplication(const WEnvironment &env)
   Wt::WBorderLayout *layout = new Wt::WBorderLayout();
   mainContainer->setLayout(layout);
   layout->addWidget(navigation, Wt::WBorderLayout::North);
-// item->setStyleClass("alert-warning");
   layout->addWidget(content_south(), Wt::WBorderLayout::South);
   layout->addWidget(contentsStack, Wt::WBorderLayout::Center);
 

@@ -73,7 +73,10 @@ WContainerWidget* SystemTab::content_System() {
   
   auto pb4 = new CommandExecutingButton(
       "volume", label, key_to_command["volume"], ta_command_output, application);
+   auto pb5 = new CommandExecutingButton(
+      "ldapsearch", label, key_to_command["ldap"], ta_command_output, application);
   contentTab->addWidget(pb4);
+  contentTab->addWidget(pb5);
   contentTab->addWidget(label);
   contentTab->addWidget(ta_command_output);
 

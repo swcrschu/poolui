@@ -1,7 +1,13 @@
-# config file
+# view config file
 date	      date
 uptime	      uptime
 list	      ls -alh
 ip-add	      ip -o -4 addr show | awk -F '[ /]+' '/global/ {print $4}'
 session	      cat /proc/net/iet/session
 volume	      cat /proc/net/iet/volume
+ldap	      ldapsearch -H "ldaps://ldap.uni-greifswald.de" -LLL -b ou=Subnets,cn=Settings,dc=DHCP,dc=Konfigurationen,dc=TLD -D cn=ISCSI,ou=Config-R,dc=LDAPManager,dc=TLD -x -w 91d0d0f15ef12db348d71cdd2d3761ce58832fd0 dhcpStatements | egrep -A 4 "if exists" | egrep -i -B 2 -A 1
+
+# model / controller
+controller    sh $HOME/setup/controller.sh
+mount	      cat /etc/mtab | grep "/mnt/" | awk '{print $2}'
+image         find /mnt/images -size +3G

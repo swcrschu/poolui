@@ -13,7 +13,8 @@ class CommandExecutingButton : public Wt::WPushButton {
       Wt::WTextArea* _ta_command_output,
       Wt::WApplication* _application,
       Wt::WContainerWidget *parent = nullptr);
-  void MacheWasNeues();
+//ldapsearch add the mac to ldap command
+  void setCommand(std::string _command);
 
  private:
   Wt::WString *buttonText;

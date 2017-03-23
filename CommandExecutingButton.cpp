@@ -34,7 +34,11 @@ CommandExecutingButton::CommandExecutingButton(const Wt::WString buttonText,
   }));
 }
 
-void CommandExecutingButton::MacheWasNeues() {}
+void CommandExecutingButton::setCommand(std::string _command) {
+  command = _command;
+  
+
+}
 // versuch den Befehl bei mouseover im Widget WLabel auszugeben
 void CommandExecutingButton::command_preview(Wt::WString _command, Wt::WLabel* wlabel_command){
  wlabel_command->setText(_command);

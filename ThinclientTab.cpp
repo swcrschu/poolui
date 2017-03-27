@@ -54,7 +54,7 @@ ThinclientTab::ThinclientTab(map<string, string> &_key_to_command,
 }
 
 ThinclientTab::~ThinclientTab() {}
-/// hier kommt die Maus
+/// hier kommt die Maus doxygen Kommandos
 // Content ThinClient
 WContainerWidget *ThinclientTab::content_ThinClient() {
   auto contentTab = new Wt::WContainerWidget();

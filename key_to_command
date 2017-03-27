@@ -10,4 +10,4 @@ ldap	      ldapsearch -H "ldaps://ldap.uni-greifswald.de" -LLL -b ou=Subnets,cn=
 # model / controller
 controller    sh $HOME/setup/controller.sh
 mount	      cat /etc/mtab | grep "/mnt/" | awk '{print $2}'
-image         find /mnt/images -size +3G
+image         sudo find /mnt/images -name *.img -print

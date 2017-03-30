@@ -52,12 +52,11 @@ class ThinclientTab : public Wt::WContainerWidget {
       button_label = button->text().toUTF8();
     }
     // output update helper
-    target_name_box->setText("iqn." + date->text() + ".de.uni-greifswald:tci." +
-			     ip->text() + ":" + hardware->text() + ":" +
-			     button_label + "." + mac->text() + ".img" + " " +
-			     user->text() + " " + passwort->text() + " " +
-			     volume->valueText() + " " + image->valueText() +
-			     " " + dest->valueText());
+    target_name_box->setText(
+	"iqn." + date->text() + ".de.uni-greifswald:tci." + ip->text() + ":" +
+	hardware->text() + ":" + button_label + "." + mac->text() + ".img" +
+	" " + volume->valueText() + " " + image->valueText() + " " +
+	dest->valueText() + " " + user->text() + " " + passwort->text() );
 
     // ldapsearch output + mac filter + in one Line
     ldapsearch->setCommand((key_to_command["ldap"] + mac->text()).toUTF8() +

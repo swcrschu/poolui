@@ -163,6 +163,7 @@ WContainerWidget *ThinclientTab::content_ThinClient() {
   auto cbImage = new WComboBox();
   tTarget->bindString("image", "Image");
   tTarget->bindWidget("cbImage", cbImage);
+  cbImage->addItem("0");
   auto pbImageSearch = new WPushButton("Suche");
   tTarget->bindString("suche", "Suche");
   tTarget->bindWidget("pbImageSearch", pbImageSearch);
@@ -202,7 +203,6 @@ WContainerWidget *ThinclientTab::content_ThinClient() {
   tTarget->bindWidget("pbMount", pbMount);
 
   pbMount->clicked().connect(std::bind([=]() {
-    pbMount->setText("Thank you");
 
     sbDestination->clear();
     std::string answer = execute_command_with_ssh(

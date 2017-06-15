@@ -1,0 +1,25 @@
+
+  
+option space PXE;
+option PXE.mtftp-ip                code 1 = ip-address;
+option PXE.mtftp-cport             code 2 = unsigned integer 16;
+option PXE.mtftp-sport             code 3 = unsigned integer 16;
+option PXE.mtftp-tmout             code 4 = unsigned integer 8;
+option PXE.mtftp-delay             code 5 = unsigned integer 8;
+option PXE.discovery-control       code 6 = unsigned integer 8;
+option PXE.discovery-mcast-addr    code 7 = ip-address;
+
+option space gpxe;
+option gpxe-encap-opts 		   code 175 = encapsulate gpxe;
+option gpxe.priority 		   code 1 = signed integer 8;
+option gpxe.keep-san 		   code 8 = unsigned integer 8;
+option gpxe.no-pxedhcp 		   code 176 = unsigned integer 8;
+option gpxe.bus-id 		   code 177 = string;
+option gpxe.bios-drive 		   code 189 = unsigned integer 8;
+option gpxe.username 		   code 190 = string;
+option gpxe.password 		   code 191 = string;
+option gpxe.reverse-username 	   code 192 = string;
+option gpxe.reverse-password       code 193 = string;
+option gpxe.version 	           code 235 = string;
+option iscsi-initiator-iqn	   code 203 = string;
+

@@ -1,0 +1,11 @@
+
+  # 2017-04-30 14:17:40
+  host nuci5 {
+      hardware ethernet F4:4D:30:60:E9:63;
+      if exists user-class and option user-class = "gPXE"{filename "gpxelinux.0";
+      option root-path "iscsi:10.10.0.1::::iqn.2015-10.de.uni-greifswald:tci.10.10.0.1:nuci5:Linux.F4:4D:30:60:E9:63.img";
+      option gpxe.username "uhrz03";
+      option gpxe.password "n3v9l7xspace";
+      }
+      else {filename "pxelinux.0";}
+  } 

@@ -6,7 +6,315 @@
     <p class="lead">Layout &#8212; building blocks for organizing your
     application as a tree of widgets</p>
   </message>
+ 
+  <message id="Target-template">
+    <form class="form-horizontal">
+   
+      <div class="form-group">
+	<label class="col-md-3 control-label" for="${id:os}">${label}</label>
+	<div class="col-md-4">
+	  ${os} ${os2} ${dual}
+	</div>
+      </div>
+     
+      <div class="form-group">
+        <label class="col-md-3 control-label" for="{id:iqn}">${iqn}</label>
+	  <div class="col-md-2">  
+	    ${wlDate}
+	  </div>
+      </div>
 
+      <div class="form-group">
+	  <label class="col-md-3 control-label" for="{id:mac}">${mac}</label>
+	  <div class="col-md-3">  
+	    ${wlMac}
+	  </div>
+	   <div class="col-md-2">  
+	    ${infoMac}
+	  </div>
+	   <div class="col-md-4">  
+	    ${ldapsearch}
+	  </div>
+	
+	</div>
+
+	<div class="form-group">
+	  <label class="col-md-3 control-label" for="{id:ip}">${ip}</label>
+	  <div class="col-md-2">  
+	    ${wlIP}
+	  </div>
+	</div>
+
+	<div class="form-group">
+	  <label class="col-md-3 control-label" for="{id:hardware}">${hardware}</label>
+	  <div class="col-md-2">  
+	    ${wlHardware}
+	  </div>
+	    <div class="col-md-2">  
+	    ${infoHardware}
+	  </div>
+      	</div>
+
+	
+
+	<div class="form-group">
+	  <label class="col-md-3 control-label" for="{id:user">${user}</label>
+	  <div class="col-md-2">  
+	    ${wlUser}
+	  </div>
+	    <div class="col-md-2">  
+	    ${wlPass}
+	  </div>
+	    <div class="col-md-2">  
+	    ${infoAuth}
+	  </div>
+
+      	</div>
+
+	<hr />
+	
+	<div class="form-group">
+	  <label class="col-md-3 control-label" for="{id:lun}">${lun}</label>
+	  <div class="col-md-2">  
+	    ${pbLunNew} 
+	  </div>
+	    <div class="col-md-2">  
+	  </div>
+      	</div>
+
+	<div class="form-group">
+	  <label class="col-md-3 control-label" for="{id:volume}">${volume}</label>
+	  <div class="col-md-2">  
+	    ${sbVolumeSize}
+	  </div>
+	    <div class="col-md-2">  
+	    ${infoVolumeSize}
+	  </div>
+      	</div>
+		
+	<div class="form-group">
+	  <label class="col-md-3 control-label" for="{id:image}">${image}</label>
+	  <div class="col-md-6">  
+	    ${cbImage}
+	  </div>
+	  <div class="col-md-3">  
+	    ${pbImageSearch}
+	  </div>
+
+	</div>
+
+	<div class="form-group">
+	  <label class="col-md-3 control-label" for="{id:zielpfad}">${zielpfad}</label>
+	  <div class="col-md-6">  
+	    ${sbDestination}
+	  </div>
+	  <div class="col-md-3">
+	    ${pbMount}  
+	  </div>
+	</div>
+
+	  <hr />
+
+	<div class="form-group">
+	  <label class="col-md-3 control-label" for="{id:check}">${check}</label>
+	    <div class="col-md-2">  
+	    ${pbCheck}
+	  </div>
+	</div>
+
+	<div class="form-group">
+	  <label class="col-md-3 control-label" for="{id:create}">${create}</label>
+	    <div class="col-md-2">  
+	      ${pbDHCP}
+	    </div>
+	    <div class="col-md-2">  
+	   ${pbCreate}
+	    </div>
+      	</div>
+	
+	<div class="form-group">
+	  <div class="col-md-12">  
+	    ${ta_command_output}
+	  </div>
+	</div>
+
+
+   </form>
+  </message>
+
+  <message id="DHCP-template">
+   <form class="form-horizontal">
+   
+      <div class="form-group">
+	<label class="col-md-2 control-label" for="${id:hostname}">${hostname}</label>
+	<div class="col-md-4">
+	  ${hostname}
+	</div>
+      </div>
+     
+      <div class="form-group">
+	<label class="col-md-2 control-label" for="${id:mac}">${mac}</label>
+	<div class="col-md-4">
+	  ${macadress}
+	</div>
+      </div>
+    
+
+      <div class="form-group">
+	<label class="col-md-2 control-label" for="${id:rpath}">${rpath}</label>
+	<div class="col-md-10">
+	  ${root-path}
+	</div>
+      </div>
+     
+      <div class="form-group">
+	<label class="col-md-2 control-label" for="${id:user}">${user}</label>
+	<div class="col-md-4">
+	  ${username}
+	</div>
+      </div>
+     
+      <div class="form-group">
+	<label class="col-md-2 control-label" for="${id:pass}">${pass}</label>
+	<div class="col-md-4">
+	  ${password}
+	</div>
+      </div>
+
+      <div class="form-group">
+	<div class="col-md-offset-10 col-md-2">
+	  ${pbDelete}
+	</div>
+      </div>
+
+
+
+
+   </form>
+  </message>
+ 
+  <message id="iscsi-template">
+   <form class="form-horizontal">
+   
+      <div class="form-group">
+	<label class="col-md-2 control-label" for="${id:target}">${target}</label>
+	<div class="col-md-10">
+	  ${wtIqn}
+	</div>
+      </div>
+     
+      <div class="form-group">
+	<label class="col-md-2 control-label" for="${id:lun}">${lun}</label>
+	<div class="col-md-1">
+	  ${wtLun} 
+        </div>
+      </div>
+
+      <div class="form-group">
+	<label class="col-md-2 control-label" for="${id:lunpath}">${lunpath}</label>
+	<div class="col-md-10">
+	  ${wtLunpath} 
+        </div>
+       </div>
+
+      <div class="form-group">
+	<label class="col-md-2 control-label" for="${id:auth}">${auth}</label>
+	<div class="col-md-2">
+	  ${wtUsername} 
+        </div>
+      </div>
+      
+      <div class="form-group">
+	<label class="col-md-2 control-label" for="${id:password}">${password}</label>
+	<div class="col-md-2">
+	  ${wtPassword} 
+        </div>
+      </div>
+     
+
+      <div class="form-group">
+	<div class="col-md-offset-10 col-md-2">
+	  ${pbTargetdel}
+	</div>
+      </div>
+
+
+
+
+   </form>
+  </message>
+  
+  <message id="iscsiinfo-panel">
+   <form class="form-horizontal">
+   
+      <div class="form-group">
+	<label class="col-md-2 control-label" for="${id:targets}">${targets}</label>
+	<div class="col-md-10">
+	  ${wtTargets}
+	</div>
+      </div>
+     
+      <div class="form-group">
+	<label class="col-md-2 control-label" for="${id:sessions}">${sessions}</label>
+	<div class="col-md-1">
+	  ${wtSessions} 
+        </div>
+      </div>
+    </form>
+  </message>
+   
+  <message id="Thinclientadd-template">
+   <form class="form-horizontal">
+   
+      <div class="form-group">
+	<label class="col-md-2 control-label" for="${id:mac}">${mac}</label>
+	<div class="col-md-offset-1 col-md-4">
+	  ${wlMac}
+	</div>
+      </div>
+     
+      <div class="form-group">
+	<label class="col-md-2 control-label" for="${id:hostname}">${hostname}</label>
+	<div class="col-md-offset-1 col-md-4">
+	  ${wlHostname} 
+        </div>
+      	<div class="col-md-2">
+	  ${pbThinclientadd}
+        </div>
+
+      </div>
+    </form>
+  </message>
+
+
+
+
+  <message id="thinclients-panel">
+   <form class="form-horizontal">
+   
+      <div class="form-group">
+	<label class="col-md-2 control-label" for="${id:mac}">${mac}</label>
+	<div class="col-md-offset-1 col-md-4">
+	  ${wtMac}
+	</div>
+      </div>
+     
+      <div class="form-group">
+	<label class="col-md-2 control-label" for="${id:hostname}">${hostname}</label>
+	<div class="col-md-offset-1 col-md-4">
+	  ${wtHostname} 
+        </div>
+      	<div class="col-md-offset-5 col-md-2">
+	  ${pbThinclientcreate} 
+        </div>
+
+      </div>
+    </form>
+  </message>
+
+
+ 
+  
   <message id="layout-Containers">
     <h2 id="containers">Containers</h2>
     <p>
@@ -1502,127 +1810,6 @@
     </div>
   </message>
   
-  <message id="Target-template">
-    <form class="form-horizontal">
-   
-      <div class="form-group">
-	<label class="col-md-3 control-label" for="${id:os}">${label}</label>
-	<div class="col-md-4">
-	  ${os} ${os2} ${dual}
-	</div>
-      </div>
-     
-      <div class="form-group">
-        <label class="col-md-3 control-label" for="{id:iqn}">${iqn}</label>
-	  <div class="col-md-2">  
-	    ${wlDate}
-	  </div>
-      </div>
-
-      <div class="form-group">
-	  <label class="col-md-3 control-label" for="{id:mac}">${mac}</label>
-	  <div class="col-md-2">  
-	    ${wlMac}
-	  </div>
-	   <div class="col-md-2">  
-	    ${infoMac}
-	  </div>
-	   <div class="col-md-4">  
-	    ${ldapsearch}
-	  </div>
-	
-	</div>
-
-	<div class="form-group">
-	  <label class="col-md-3 control-label" for="{id:ip}">${ip}</label>
-	  <div class="col-md-2">  
-	    ${wlIP}
-	  </div>
-	</div>
-
-	<div class="form-group">
-	  <label class="col-md-3 control-label" for="{id:hardware}">${hardware}</label>
-	  <div class="col-md-2">  
-	    ${wlHardware}
-	  </div>
-	    <div class="col-md-2">  
-	    ${infoHardware}
-	  </div>
-      	</div>
-
-	
-
-	<div class="form-group">
-	  <label class="col-md-3 control-label" for="{id:user">${user}</label>
-	  <div class="col-md-2">  
-	    ${wlUser}
-	  </div>
-	    <div class="col-md-2">  
-	    ${wlPass}
-	  </div>
-      	</div>
-
-	<hr />
-	
-	<div class="form-group">
-	  <label class="col-md-3 control-label" for="{id:lun}">${lun}</label>
-	  <div class="col-md-2">  
-	    ${pbLunNew} 
-	  </div>
-	    <div class="col-md-2">  
-	  </div>
-      	</div>
-
-	<div class="form-group">
-	  <label class="col-md-3 control-label" for="{id:volume}">${volume}</label>
-	  <div class="col-md-2">  
-	    ${sbVolumeSize}
-	  </div>
-	    <div class="col-md-2">  
-	    ${infoVolumeSize}
-	  </div>
-      	</div>
-		
-	<div class="form-group">
-	  <label class="col-md-3 control-label" for="{id:image}">${image}</label>
-	  <div class="col-md-6">  
-	    ${cbImage}
-	  </div>
-	  <div class="col-md-3">  
-	    ${pbImageSearch}
-	  </div>
-
-	</div>
-
-	<div class="form-group">
-	  <label class="col-md-3 control-label" for="{id:zielpfad}">${zielpfad}</label>
-	  <div class="col-md-6">  
-	    ${sbDestination}
-	  </div>
-	  <div class="col-md-3">
-	    ${pbMount}  
-	  </div>
-	</div>
-
-	  <hr />
-
-	<div class="form-group">
-	  <label class="col-md-3 control-label" for="{id:check}">${check}</label>
-	  <div class="col-md-2">  
-	    ${pbCheck}
-	  </div>
-	</div>
-	
-	<div class="form-group">
-	  <div class="col-md-12">  
-	    ${ta_command_output}
-	  </div>
-	</div>
-
-
-   </form>
-  </message>
- 
   <message id="editSide-template">
     <div class="form-group">
       <div class="input-group">

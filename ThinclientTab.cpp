@@ -18,16 +18,37 @@
 #include <Wt/WTextArea>
 #include <Wt/WVBoxLayout>
 
+#include <algorithm>
 #include "CommandExecutingButton.hpp"
 #include "ThinclientTab.hpp"
-#include "ssh.h"
+#include "DHCPConfigurator.hpp"
+#include "iSCSIConfigurator.hpp"
+#include "iSCSIInfo.hpp"
+#include "ThinclientAdd.hpp"
+#include "utility.hpp"
+#include "web_ui.h"
+
 
 using namespace Wt;
 using namespace std;
 
+
+// preparation ssh output
+std::vector<std::string> to_lines(std::string text_block) {
+  std::vector<std::string> ret;
+  stringstream stream(text_block);
+  string line;
+  while (getline(stream, line)) {
+    line = filter_character(line);
+    if (line == "") continue;
+    if (line == " ") continue;
+    ret.push_back(line);
+  }
+  return ret;
+}
 // ThinclientTab ia a WContainerWidget
 ThinclientTab::ThinclientTab(map<string, string> &_key_to_command,
-			     WApplication *_ap) {
+			     WebUIApplication *_ap) {
   application = _ap;
   key_to_command = _key_to_command;
   // BoxLayout horizontal two columns
@@ -44,8 +65,10 @@ ThinclientTab::ThinclientTab(map<string, string> &_key_to_command,
   subMenu->setWidth(200);
 
   // subMenu->addItem(new Wt::WMenuItem("Serververwaltung", pServerVerwaltung));
+  subMenu->addItem("iSCSI Info", new iSCSIInfo(key_to_command,application));
   subMenu->addItem("Target erstellen", content_ThinClient());
-  subMenu->addItem("Target bearbeiten", new Wt::WText("test"));
+  subMenu->addItem("Target loeschen¶", new iSCSIConfigurator(key_to_command,application));
+  subMenu->addItem("Thinclient hinzufuegen", new ThinclientAdd(key_to_command,application));
 
   subMenuContainer->addWidget(subMenu);
 
@@ -54,12 +77,13 @@ ThinclientTab::ThinclientTab(map<string, string> &_key_to_command,
 }
 
 ThinclientTab::~ThinclientTab() {}
-/// hier kommt die Maus doxygen Kommandos
+
+
 // Content ThinClient
 WContainerWidget *ThinclientTab::content_ThinClient() {
   auto contentTab = new Wt::WContainerWidget();
 
-  // XML one for all template
+  // XML template target
   auto tTarget = new Wt::WTemplate(Wt::WString::tr("Target-template"));
   tTarget->addFunction("id", &Wt::WTemplate::Functions::id);
 
@@ -76,6 +100,7 @@ WContainerWidget *ThinclientTab::content_ThinClient() {
   // Panel
   auto contentPanel = new Wt::WContainerWidget();
   auto ptargetCreate = new Wt::WPanel();
+  ptargetCreate->setStyleClass("panel-primary");
   ptargetCreate->setWidth(1024);
   ptargetCreate->addStyleClass("centered-example");
   ptargetCreate->setTitle("Target erstellen");
@@ -89,14 +114,14 @@ WContainerWidget *ThinclientTab::content_ThinClient() {
   group->addButton(buttonLinux);
   group->addButton(buttonWindows);
   group->addButton(buttonDual);
-  //  group->setSelectedButtonIndex(0);
+  group->setSelectedButtonIndex(0);
   tTarget->bindString("label", "Betriebssystem: ");
   tTarget->bindWidget("os", buttonLinux);
   tTarget->bindWidget("os2", buttonWindows);
   tTarget->bindWidget("dual", buttonDual);
 
   // iqnDate
-  auto wlDate = new Wt::WLineEdit();
+  auto wlDate = new Wt::WLineEdit("2015-10");
   wlDate->setTextSize(15);
   wlDate->setInputMask("9999-99;_");
   tTarget->bindString("iqn", "IQN-Datum (yyyy-mm):");
@@ -105,7 +130,7 @@ WContainerWidget *ThinclientTab::content_ThinClient() {
   // MAC input Mask
   // character
   // https://www.webtoolkit.eu/wt/doc/reference/html/classWt_1_1WLineEdit.html#acfffadaf2a0409a79dbb3f69c5ec0666
-  auto wlMac = new Wt::WLineEdit();
+  auto wlMac = new Wt::WLineEdit("F4:4D:30:60.E9:62");
   auto infoMac = new WText("vollst&auml;ndig angeben");
   wlMac->setTextSize(15);
   wlMac->setInputMask("HH:HH:HH:HH:HH:HH;_");
@@ -115,14 +140,14 @@ WContainerWidget *ThinclientTab::content_ThinClient() {
   tTarget->bindWidget("infoMac", infoMac);
   // Serverip
 
-  auto wlIP = new Wt::WLineEdit();
+  auto wlIP = new Wt::WLineEdit("10.10.0.1");
   wlIP->setTextSize(15);
   wlIP->setInputMask("009.009.009.009;_");
   tTarget->bindString("ip", "Server-IP:");
   tTarget->bindWidget("wlIP", wlIP);
 
   // thinClient Hardware
-  auto wlHardware = new Wt::WLineEdit();
+  auto wlHardware = new Wt::WLineEdit("nuci5");
   auto infoHardware = new WText("max: 12 Zeichen");
   wlHardware->setTextSize(15);
   wlHardware->setInputMask("xxxxxxxxxxxx;_");
@@ -133,9 +158,9 @@ WContainerWidget *ThinclientTab::content_ThinClient() {
   // user password
   // TODO Random Button and Validierung
   //
-  auto wlPass = new Wt::WLineEdit();
-  auto wlUser = new Wt::WLineEdit();
-  auto infoAuth = new WText("min: 8 Zeichen");
+  auto wlUser = new Wt::WLineEdit("uhrz03");
+  auto wlPass = new Wt::WLineEdit("n3v9l7xspace");
+  auto infoAuth = new WText("8-12 Zeichen");
   wlUser->setTextSize(15);
   wlUser->setInputMask("NNNNNnnnnnnn;_");
   wlPass->setTextSize(15);
@@ -143,6 +168,7 @@ WContainerWidget *ThinclientTab::content_ThinClient() {
   tTarget->bindString("user", "User / Passwort: ");
   tTarget->bindWidget("wlUser", wlUser);
   tTarget->bindWidget("wlPass", wlPass);
+  tTarget->bindWidget("infoAuth", infoAuth);
 
   // LUN
   auto pbLunNew = new Wt::WPushButton("Neu");
@@ -181,37 +207,37 @@ WContainerWidget *ThinclientTab::content_ThinClient() {
   // Image Search
   pbImageSearch->clicked().connect(std::bind([=]() {
     cbImage->clear();
-    std::string answerImage = execute_command_with_ssh(
-	"schuldtc", "141.53.7.32", key_to_command["image"].c_str());
 
-    std::string line2;
-    stringstream answer_stream2(answerImage);
-    while (getline(answer_stream2, line2)) {
-      if (line2 == "") continue;
-      cbImage->addItem(line2);
+    auto& client = application->get_ssh_client();
+    std::string answer = client.execute_command(key_to_command["image"]);
+
+    auto lines = to_lines(answer);
+    for (auto &line : lines) {
+      cbImage->addItem(line);
       // disable the New button
-      pbLunNew->setEnabled(false);
-      pbLunNew->setStyleClass("btn btn-warning");
     }
+
+    pbLunNew->setEnabled(false);
+    pbLunNew->setStyleClass("btn btn-warning");
 
   }));
 
 #if 1  // Destination
   auto sbDestination = new WSelectionBox();
+  //temp
+  sbDestination->addItem("/mnt/images");
   tTarget->bindWidget("sbDestination", sbDestination);
   auto pbMount = new WPushButton("Zielpfad");
   tTarget->bindWidget("pbMount", pbMount);
 
   pbMount->clicked().connect(std::bind([=]() {
-
     sbDestination->clear();
-    std::string answer = execute_command_with_ssh(
-	"schuldtc", "141.53.7.32", key_to_command["mount"].c_str());
 
-    std::string line;
-    stringstream answer_stream(answer);
-    while (getline(answer_stream, line)) {
-      if (line == "") continue;
+    auto& client = application->get_ssh_client();
+    std::string answer = client.execute_command(key_to_command["mount"]);
+
+    auto lines = to_lines(answer);
+    for (auto &line : lines) {
       sbDestination->addItem(line);
     }
 
@@ -224,11 +250,26 @@ WContainerWidget *ThinclientTab::content_ThinClient() {
       new CommandExecutingButton("Check", label, key_to_command["controller"],
 				 ta_command_output, application);
 
+ 
+  pbCreate = 
+    new CommandExecutingButton("iSCSI", label,key_to_command["controller"],
+				  ta_command_output, application);
+  pbDHCP = 
+    new CommandExecutingButton("DHCP", label,key_to_command["controller"],
+				  ta_command_output, application);
+
   pbCheck->setStyleClass("btn-primary");
   tTarget->bindString("check", "Check: ");
   tTarget->bindWidget("pbCheck", pbCheck);
+  
+  pbCreate->setStyleClass("btn-warning");
+  pbDHCP->setStyleClass("btn-warning");
+  tTarget->bindString("create", "Create: ");
+  tTarget->bindWidget("pbCreate", pbCreate);
+  tTarget->bindWidget("pbDHCP", pbDHCP);
 
-  // update_helper
+
+   // update_helper
   auto wtTargetNameBox = new WText("auto Text");
   // instance
   // input

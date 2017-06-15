@@ -4,7 +4,6 @@
  * See the LICENSE file for terms of use.
  */
 #include <Wt/WAnchor>
-#include <Wt/WApplication>
 #include <Wt/WBreak>
 #include <Wt/WBootstrapTheme>
 #include <Wt/WBorderLayout>
@@ -45,38 +44,25 @@
 #include "utility.hpp"
 #include "web_ui.h"
 
-#include "ssh.h"
 #include "SystemTab.hpp"
 #include "ThinclientTab.hpp"
 #include "MonitoringTab.hpp"
+#include "DHCPConfigurator.hpp"
+#include "iSCSIConfigurator.hpp"
 
 using namespace Wt;
 using namespace std;
 
 // c++0x only, for std::bind
 
-class WebUIApplication : public WApplication {
- public:
-  WebUIApplication(const WEnvironment &env);
-
- private:
-// LayoutContainer
-  Wt::WWidget *content_south();
-
-// command-Output mouseover
-  Wt::WLabel *label;
-// Comand-Output Area
-  Wt::WTextArea *ta_command_output;
-  
-//  key value map command file key_to_command
-  std::map<string, string> key_to_command;
-  void read_input_file(std::string filename);
-
-};
 
 WebUIApplication::WebUIApplication(const WEnvironment &env)
-    : WApplication(env) {
+    : WApplication(env) ,
+      client("xxx.xx.xx.xxx","xxxxxxx")
+
+{
       setTitle("poolui");
+ client.authenticate("xxxx");
 
 // css
   Wt::WBootstrapTheme *bootstrapTheme = new Wt::WBootstrapTheme(this);
@@ -108,7 +94,9 @@ WebUIApplication::WebUIApplication(const WEnvironment &env)
 // Setup a Left-aligned top menue
   Wt::WMenu *topMenu = new Wt::WMenu(contentsStack, menuContainer);
   topMenu->addItem("System", new SystemTab(key_to_command,this));
+  topMenu->addItem("DHCPConfigurator", new DHCPConfigurator(key_to_command,this));
   topMenu->addItem("ThinClient infrastructure", new ThinclientTab(key_to_command,this));
+//  topMenu->addItem("iSCSITargets bearbeiten",new iSCSIConfigurator(key_to_command,this));
   topMenu->addItem("monitoring",new MonitoringTab(key_to_command,this));
   navigation->addMenu(topMenu);
 
@@ -154,14 +142,9 @@ void WebUIApplication::read_input_file(std::string filename) {
 
 WApplication *createApplication(const WEnvironment &env) {
 
-#if 0 
-  authenticate_with_ssh( "schuldtc", "schuldtc", "141.53.7.32" );
-  std::string answer = execute_command_with_ssh( "schuldtc", "141.53.32.45", "ls ~" );
+ auto ret = new WebUIApplication(env);
+ return ret;
 
-  std::cout << "got answer : " << answer << std::endl;
-#endif
-
-  return new WebUIApplication(env);
 }
 int WebUI::run(int argc, char **argv) {
   /*

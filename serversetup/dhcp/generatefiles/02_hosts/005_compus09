@@ -1,0 +1,11 @@
+
+  # 2017-05-04 12:21:02
+  host compus09 {
+      hardware ethernet F4:4D:30:60:E9:22;
+      if exists user-class and option user-class = "gPXE"{filename "gpxelinux.0";
+      option root-path "iscsi:10.10.0.1::::iqn.2015-10.de.uni-greifswald:tci.10.10.0.1:compus09:Windows.F4:4D:30:60:E9:22.img";
+      option gpxe.username "uhrz03";
+      option gpxe.password "n3v9l7xspace";
+      }
+      else {filename "pxelinux.0";}
+  } 

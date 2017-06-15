@@ -6,12 +6,12 @@
 
 class MonitoringTab : public Wt::WContainerWidget{
 public:
-    MonitoringTab (std::map<std::string,std::string>& _ktc, Wt::WApplication* ap); 
+    MonitoringTab (std::map<std::string,std::string>& _ktc, WebUIApplication* ap); 
     virtual ~MonitoringTab ();
 
 private:
     /* data */
     Wt::WContainerWidget* content_Monitoring();
     std::map<std::string,std::string> key_to_command;
-    Wt::WApplication* application = nullptr;
+    WebUIApplication* application = nullptr;
 };

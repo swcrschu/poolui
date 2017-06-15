@@ -1,0 +1,214 @@
+#!/bin/bash
+#
+#info
+#	 $# = enthält die Anzahl der übergebenen Parameter
+#	 $0 = enthält den Namen des scripts
+#	 $1-9 = enthalten die ersten neun Parameter
+#
+#
+#echo "\$# = $#"
+#echo "\$0 = $0"
+#echo "$1"
+#echo "User = $2"
+#echo "Passwort = $3"
+#echo "new Volume Size = $4"
+#echo "copy Image = $5"
+#echo "Zielpfad = $6"
+# sudo find /etc/iet/ -type f -exec grep '$1' {} \;
+# $# - $1-9 not available in functions?
+##############################################################
+# task [check/create]
+task=$1
+
+iqn=$2
+volumeSize=$3
+image=$4
+destination=$5
+user=$6
+password=$7
+#############################################################
+#	preCheck global var
+# c1 = iqn ; c2 = new volume or image copy ; c3 = destination
+c1=false
+c2=false
+c3=false
+#
+############
+#
+ietdconf=/etc/iet/ietd.conf
+errors=();
+#
+############
+
+function preCheck
+{
+# ---------------------------------------------------
+  # Search for an existing target 
+  # search and save all targets form ietd.conf
+  target=$(sudo find $ietdconf -type f -exec grep 'Target iqn.*' {} \; | awk '{print $2}')
+  array=($target)
+  aLen=${#array[@]}
+  STATE=0
+	
+  # iqn: go through and check avaliable 
+
+  for ((i=0;i<=${aLen};i++))
+   do
+      if [ "${array[i]}" == "$iqn" ]; then		
+	STATE=1	
+  
+      fi		
+	
+   done
+  
+      if [ $STATE -eq 1 ]; then		 
+	errors=("${errors[@]}" "IQN is available! Try again with an not existing Target") 
+	exit 1
+      else 
+	c1=true
+
+      fi
+# --------------------------------------------------
+  # new volume or image copy
+	## -o prüft erste Bedienung, wenn true wird zweite nicht mehr gepfüft
+	## -a prüft erste & zweite Bedienung
+
+  if [ "$volumeSize" -gt 0 ]; then
+  	c2=true		
+  
+  elif [ "$volumeSize" -eq 0 -a -e $image ]; then
+  	c2=true		
+  else
+	errors=("${errors[@]}" "You need a new image or a copy of an image") 
+
+  fi
+
+# --------------------------------------------------
+   # destination exists ?
+   # -d = file is a directory
+   # TODO check verfügbare ordner größe und prüfe rest nach kopie oder neu volume
+
+  if [ -d $destination ]; then
+	c3=true
+  else
+	errors=("${errors[@]}" "$destination The directory does not exist ") 
+  fi
+
+  preCheckSUM
+}
+
+
+
+function preCheckSUM
+{
+  if [ "$c1" == "true" -a "$c2" == "true" -a "$c3" == "true"  ]; then
+#     echo "all checks complete and done"
+#     echo "true"
+      preCheckTASK $task	
+  
+  else
+    echo "check finished with: ${#errors[@]} error/s"
+#   echo ${errors[@]} Ausgabe der Schleife ist schicker
+    max=${#errors[*]}
+    typeset -i i=0
+    while (( i < max ))
+	do
+   	  echo "error $i :"  ${errors[$i]}
+          i=i+1
+        done
+	exit 1
+  fi	
+		
+
+}
+
+
+function preCheckTASK
+{
+
+  if [ "$task" == "create" ]; then
+    
+   echo "task = $task 
+	 aufruf function create "
+	createTARGET $iqn $volumeSize $image $destination $user $passwor
+
+   elif [ "$task" == "check" ]; then
+	echo "target: $task complete
+	      were tested:
+	      -----------
+	      IQN: $c1
+              Image: $c2
+	      Destionation: $c3	 "
+			 
+	exit 0
+  
+   else	
+	echo "task: $task error"
+	exit 1
+
+ fi
+}
+
+function createTARGET
+{
+# new volume or image copy
+	## -o prüft erste Bedienung, wenn true wird zweite nicht mehr gepfüft
+	## -a prüft erste & zweite Bedienung
+# Lun complete 
+ Lun=$destination/$iqn\0
+ 
+ if [ "$volumeSize" -gt 0 ]; then
+	echo "create a new Volume"
+	
+	create=$(sudo dd if=/dev/zero of=$destination/$iqn\0 count=0 obs=1 seek=$volumeSize\G)
+	$create
+	
+
+  elif [ "$volumeSize" -eq 0 -a -e $image ]; then
+	echo "create a Copy from: $image"
+ 	copy=$(sudo cp $image $Lun )	
+	$copy
+	echo "kopieren fertig"
+	
+ fi
+
+
+datum=$(date +"%Y-%m-%d %H:%M:%S")
+cat <<EOT >> $ietdconf
+# Create $datum 
+Target $iqn
+	LUN 0 Path=$Lun,Type=fileio
+	InComingUser $user $password
+	MaxRecvDataSegmentLength        8192
+	MaxXmitDataSegmentLength        8192
+	NOPInterval                     15
+	NOPTimeout                      15
+# END
+
+EOT
+	exit 0
+}
+
+
+
+####################################
+#
+# inital check (all parameters ?)
+#
+###################################
+# -z check paramter empty or not and all config files available
+
+  if [ -z "$iqn" -o -z "$volumeSize" -o -z "$image" -o -z "$destination" -o -z "$user" -o -z "$password" ]; then
+	
+	echo "complete all Parameters to start the Check: iqn volumeSize image destination user password
+		Try again..."
+  else
+#	echo "check start..."
+	 
+	preCheck $iqn $volumeSize $image $destination $user $password
+  fi 
+
+
+
+
+

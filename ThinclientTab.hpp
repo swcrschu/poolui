@@ -1,27 +1,31 @@
 
 #pragma once
 #include <Wt/WButtonGroup>
+#include <Wt/WComboBox>
 #include <Wt/WContainerWidget>
+#include <Wt/WLineEdit>
 #include <Wt/WSelectionBox>
 #include <Wt/WSpinBox>
 #include <Wt/WString>
 #include <Wt/WText>
 
 #include <map>
-#include <string>
 
 class ThinclientTab : public Wt::WContainerWidget {
  public:
-  ThinclientTab(std::map<std::string, std::string>& _ktc, Wt::WApplication* ap);
+  ThinclientTab(std::map<std::string, std::string>& _ktc, WebUIApplication* ap);
   virtual ~ThinclientTab();
 
- private:
+   private:
   /* data */
   Wt::WContainerWidget* content_ThinClient();
   std::map<std::string, std::string> key_to_command;
-  Wt::WApplication* application = nullptr;
+  WebUIApplication* application = nullptr;
 
   CommandExecutingButton* pbCheck;
+  CommandExecutingButton* pbCreate;
+  CommandExecutingButton* ldapsearch;
+  CommandExecutingButton* pbDHCP;
 
 #if 0
   //number of mounts to inital the destionation radio buttons
@@ -41,8 +45,9 @@ class ThinclientTab : public Wt::WContainerWidget {
   Wt::WComboBox* image;
   Wt::WSelectionBox* dest;
   // output
-  CommandExecutingButton* ldapsearch;
   Wt::WText* target_name_box;
+  std::string target_name_command;
+  std::string dhcp_string;
 
   void update_text_box() {
     // get button label from checkedButton
@@ -52,19 +57,26 @@ class ThinclientTab : public Wt::WContainerWidget {
       button_label = button->text().toUTF8();
     }
     // output update helper
-    target_name_box->setText(
-	"iqn." + date->text() + ".de.uni-greifswald:tci." + ip->text() + ":" +
-	hardware->text() + ":" + button_label + "." + mac->text() + ".img" +
-	" " + volume->valueText() + " " + image->valueText() + " " +
-	dest->valueText() + " " + user->text() + " " + passwort->text() );
+    target_name_command =
+	"iqn." + date->text().toUTF8() + ".de.uni-greifswald:tci." +
+	ip->text().toUTF8() + ":" + hardware->text().toUTF8() + ":" +
+	button_label + "." + mac->text().toUTF8() + ".img" + " " +
+	volume->valueText().toUTF8() + " " + image->currentText().toUTF8() +
+	" " + dest->valueText().toUTF8() + " " + user->text().toUTF8() + " " +
+	passwort->text().toUTF8();
 
+    dhcp_string = hardware->text().toUTF8() + " " + mac->text().toUTF8();
     // ldapsearch output + mac filter + in one Line
     ldapsearch->setCommand((key_to_command["ldap"] + mac->text()).toUTF8() +
 			   " | perl -p00e 's/\r?\n //g'");
 
-    // comand to Controller
-    // TODO own class?
-    pbCheck->setCommand(
-	(key_to_command["controller"] + target_name_box->text().toUTF8()));
+    target_name_box->setText(target_name_command);
+    
+    std::string command_string = target_name_command;
+    pbCheck->setCommand(key_to_command["controller"] + "check" + " " + command_string.c_str());
+    pbCreate->setCommand(key_to_command["controller"] + "create" + " " + command_string.c_str());
+    
+    std::string dhcp_command = dhcp_string;
+    pbDHCP->setCommand(key_to_command["controller"] + "dhcp" + " " + command_string.c_str() + " " + dhcp_command.c_str());
   }
 };

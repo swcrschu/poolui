@@ -1,0 +1,139 @@
+#!/bin/bash
+#
+#info
+#	 $# = enthält die Anzahl der übergebenen Parameter
+#	 $0 = enthält den Namen des scripts
+#	 $1-9 = enthalten die ersten neun Parameter
+#
+#
+#echo "\$# = $#"
+#echo "\$0 = $0"
+#echo "$1"
+#echo "User = $2"
+#echo "Passwort = $3"
+#echo "new Volume Size = $4"
+#echo "copy Image = $5"
+#echo "Zielpfad = $6"
+# iqn.2012-12.de.uni-greifswald:tci.131.231.231.321:dell:Linux.34:17:eb:b8:92:21.img 0 /mnt/images/boot/linux/initramfs-linux.img /mnt/images ijerej 923923
+# sudo find /etc/iet/ -type f -exec grep '$1' {} \;
+# $# - $1-9 not available in functions?
+##############################################################
+iqn=$1
+volumeSize=$2
+image=$3
+destination=$4
+user=$5
+password=$6
+#############################################################
+#	preCheck global var
+#
+c1=false
+c2=false
+c3=false
+
+
+function preCheck1
+{
+  #echo "$FUNCNAME"
+  # search all targets from ietd.conf
+  target=$(sudo find /etc/iet/ietd.conf -type f -exec grep 'Target iqn.*' {} \; | awk '{print $2}')
+  array=($target)
+  aLen=${#array[@]}
+  STATE=0
+	
+#	echo ${array[@]}
+
+  # go through and check avaliable from the new Target
+  for ((i=0;i<=${aLen};i++))
+   do
+      if [ "${array[i]}" == "$iqn" ]; then		
+	echo "found: $iqn"
+	STATE=1	
+  
+    fi		
+	
+   done
+  
+      if [ $STATE -eq 1 ]; then		 
+	echo "iqn is available: $iqn "
+	echo "Check 1/5 error ...
+	      	Try again using a non-existent target"
+	
+	# Target not available 
+      else 
+		echo "iqn is not available: $iqn "
+		c1=true
+	# start preCheck2
+	preCheck2 $volumeSize $image
+
+      fi
+
+}
+
+function preCheck2
+{
+
+  if [ "$volumeSize" -gt 0 -o "$image" -eq 0 ]; then
+	echo "create a new Volume"
+  	c2=true		
+  
+  elif [ "$volumeSize" -eq 0 -o -e $image ]; then
+	echo "create a Copy from: $image"
+  	c2=true		
+  else
+	echo "nothing?" 
+
+  fi
+  
+     preCheck4 $destination
+}
+
+
+
+function preCheck4
+{
+  # -d = file is a directory
+	echo "Ziel ist: $destination"
+  if [ -d $destination ]; then
+     echo "Zielpfad ist vorhanden: $destination"
+	c3=true
+  else
+     echo  "Zielpfad ist nicht vorhanden: $destination"
+  
+  fi
+
+  preCheckSUM
+}
+
+
+
+
+function preCheckSUM
+{
+  echo "c1 = $c1"
+  echo "c2 = $c2"
+  echo "c3 = $c3"		 	
+
+}
+
+####################################
+#
+# inital check (all parameters ?)
+#
+###################################
+# -z check paramter empty or not
+
+  if [ -z "$iqn" -o -z "$volumeSize" -o -z "$image" -o -z "$destination" -o -z "$user" -o -z "$password" ]; then
+	
+	echo "complete all Parameters to start the Check: iqn volumeSize image destination user password
+		Try again..."
+  else
+	echo "check start..."
+	 
+	preCheck1 $iqn
+  fi 
+
+
+
+
+

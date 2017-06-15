@@ -1,0 +1,6 @@
+
+  subnet 10.10.0.0 netmask 255.255.0.0 {
+
+  next-server 10.10.0.1;
+  range 10.10.0.10 10.10.0.100;
+  option routers 10.10.0.1;

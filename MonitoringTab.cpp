@@ -12,7 +12,7 @@
 using namespace Wt;
 using namespace std;
 
-MonitoringTab::MonitoringTab( map<string,string>& _key_to_command, WApplication* _ap) {
+MonitoringTab::MonitoringTab( map<string,string>& _key_to_command, WebUIApplication* _ap) {
   application = _ap;
   key_to_command = _key_to_command;
 //BoxLayout horizontal

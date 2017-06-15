@@ -1,0 +1,5 @@
+	InComingUser uhrz03 n3v9l7xspace
+ 	MaxRecvDataSegmentLength        8192
+ 	MaxXmitDataSegmentLength        8192
+ 	NOPInterval                     15
+ 	NOPTimeout                      15

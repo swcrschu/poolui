@@ -423,7 +423,7 @@ function createDHCP
 # inital check (all parameters ?)
 #
 ###################################
-# -z check paramter empty or not and all config files available
+# -z check paramters are empty? 
 
 if [ -z "$iqn" -o -z "$volumeSize" -o -z "$image" -o -z "$destination" -o -z "$user" -o -z "$password" ]; then
   
@@ -431,7 +431,6 @@ if [ -z "$iqn" -o -z "$volumeSize" -o -z "$image" -o -z "$destination" -o -z "$u
 		Try again..."
 else
 #	echo "check start..."
-	 
 	preCheck $iqn $volumeSize $image $destination $user $password
 fi 
 

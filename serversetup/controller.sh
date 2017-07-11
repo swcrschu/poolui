@@ -1,6 +1,20 @@
 #!/bin/bash
+#	Copyright (c) 2017 - Christian Schuldt (christian.schuldt@uni-greifswald.de)
 #
-#info
+#    This program is free software: you can redistribute it and/or modify
+#    it under the terms of the GNU General Public License as published by
+#    the Free Software Foundation, either version 3 of the License, or
+#    (at your option) any later version.
+#
+#    This program is distributed in the hope that it will be useful,
+#    but WITHOUT ANY WARRANTY; without even the implied warranty of
+#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the 
+#    GNU General Public License for more details.
+#
+#    You should have received a copy of the GNU General Public License
+#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+################################################################
+#
 #	 $# = enthält die Anzahl der übergebenen Parameter
 #	 $0 = enthält den Namen des scripts
 #	 $1-9 = enthalten die ersten neun Parameter
@@ -8,16 +22,15 @@
 #
 #echo "\$# = $#"
 #echo "\$0 = $0"
-#echo "$1"
-#echo "User = $2"
-#echo "Passwort = $3"
-#echo "new Volume Size = $4"
-#echo "copy Image = $5"
-#echo "Zielpfad = $6"
-# sudo find /etc/iet/ -type f -exec grep '$1' {} \;
-# $# - $1-9 not available in functions?
+#echo "Tastk = $1"
+#echo "IQN = $2"
+#echo "VolumeSize = $3"
+#echo "Master-Image = $4"
+#echo "Zielpfad = $5"
+#echo "User = $6"
+#echo "Passwort = $7"
 ##############################################################
-# task [check/create]
+# task [check/create/DHCP]
 task=$1
 
 iqn=$2
@@ -32,7 +45,7 @@ hostname=$8
 mac=$9
 
 #############################################################
-#	preCheck global var
+#	preCheck global variable
 # c1 = iqn ; c2 = new volume or image copy ; c3 = destination ; c4 = dhcp
 c1=false
 c2=false

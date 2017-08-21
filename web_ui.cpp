@@ -58,11 +58,11 @@ using namespace std;
 
 WebUIApplication::WebUIApplication(const WEnvironment &env)
     : WApplication(env) ,
-      client("141.53.32.237","schuldtc")
+      client("xxxx.xxx.xx.xxx","user")
 
 {
       setTitle("poolui");
-// client.authenticate("schuldtc");
+// client.authenticate("user");
 
 // css
   Wt::WBootstrapTheme *bootstrapTheme = new Wt::WBootstrapTheme(this);

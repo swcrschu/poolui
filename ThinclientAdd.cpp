@@ -95,7 +95,7 @@ ThinclientAdd::ThinclientAdd(map<string, string>& _key_to_command, WebUIApplicat
   auto containerThinclientadd = new Wt::WContainerWidget();
   auto panelThinclientAdd = new Wt::WPanel();
   panelThinclientAdd->setCentralWidget(containerThinclientadd);
-  panelThinclientAdd->setTitle("ThinClient zum Inventar hinzufuegen");
+  panelThinclientAdd->setTitle("Thin Client zum Inventar hinzufuegen");
   panelThinclientAdd->setStyleClass("panel-primary");
   panelThinclientAdd->setWidth(500);
   auto tTarget = new Wt::WTemplate(Wt::WString::tr("Thinclientadd-template"));

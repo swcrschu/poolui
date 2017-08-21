@@ -130,9 +130,14 @@ WContainerWidget* SystemTab::content_System() {
   // https://www.webtoolkit.eu/wt/doc/reference/html/classWt_1_1WApplication.html#a02b9d8aa1b6c2d0dc9edc1b9c63f86dc
 
 	}));
-  containerSystem->addWidget(pbRefreshApp);
+  //containerSystem->addWidget(pbRefreshApp);
 
   // CommandExecutingButton
+  // Are yout root?
+  //  auto pbUpgrade =
+  //    new CommandExecutingButton("sysupdate", label, key_to_command["sysupdate"],
+  //				 ta_command_output, application);
+  //containerSystem->addWidget(pbUpgrade);
   auto pb1 =
       new CommandExecutingButton("ip-add", label, key_to_command["ip-add"],
 				 ta_command_output, application);
@@ -173,6 +178,12 @@ WContainerWidget* SystemTab::content_System() {
 					ta_command_output, application);
   containerDHCP->addWidget(pb8);
 
+  auto pb12 =
+      new CommandExecutingButton("stop", label, key_to_command["dhcpstop"],
+				 ta_command_output, application);
+  containerDHCP->addWidget(pb12);
+
+
   auto pb9 = new CommandExecutingButton("create ietd.conf", label,
 					key_to_command["iscsiregenerate"],
 					ta_command_output, application);
@@ -187,15 +198,35 @@ WContainerWidget* SystemTab::content_System() {
       new CommandExecutingButton("updates", label, key_to_command["sysupdate"],
 				 ta_command_output, application);
   //  containerSystem->addWidget(pb11);
-  auto pb12 =
-      new CommandExecutingButton("stop", label, key_to_command["dhcpstop"],
-				 ta_command_output, application);
-  containerDHCP->addWidget(pb12);
 
-   auto pb13 =
+  auto pb13 =
       new CommandExecutingButton("stop", label, key_to_command["iscsistop"],
 				 ta_command_output, application);
   containerISCSI->addWidget(pb13);
+
+  auto pb14 =
+      new CommandExecutingButton("restart", label, key_to_command["tftprestart"],
+				 ta_command_output, application);
+  containerTFTP->addWidget(pb14);
+  
+  auto pb15 =
+      new CommandExecutingButton("status", label, key_to_command["tftpstatus"],
+				 ta_command_output, application);
+  containerTFTP->addWidget(pb15);
+
+  auto pb16 =
+       new CommandExecutingButton("stop", label, key_to_command["tftpstop"],
+				 ta_command_output, application);
+  containerTFTP->addWidget(pb16);
+
+  auto pb17 =
+       new CommandExecutingButton("status", label, key_to_command["iscsistatus"],
+				 ta_command_output, application);
+  containerISCSI->addWidget(pb17);
+
+
+
+
 
   contentTab->addWidget(label);
   contentTab->addWidget(ta_command_output);

@@ -15,6 +15,7 @@
 #include <Wt/WImage>
 #include <Wt/WLabel>
 #include <Wt/WRadioButton>
+#include <Wt/WTemplate>
 #include <Wt/WLineEdit>
 #include <Wt/WLink>
 #include <Wt/WMenu>
@@ -28,10 +29,9 @@
 #include <Wt/WStackedWidget>
 #include <Wt/WString>
 #include <Wt/WTabWidget>
-#include <Wt/WTemplate>
 #include <Wt/WText>
 #include <Wt/WTextArea>
-
+#include <Wt/WImage>
 #include <algorithm>
 #include <vector>
 #include <cstddef>
@@ -58,11 +58,11 @@ using namespace std;
 
 WebUIApplication::WebUIApplication(const WEnvironment &env)
     : WApplication(env) ,
-      client("xxx.xx.xx.xxx","xxxxxxx")
+      client("141.53.32.237","schuldtc")
 
 {
       setTitle("poolui");
- client.authenticate("xxxx");
+// client.authenticate("schuldtc");
 
 // css
   Wt::WBootstrapTheme *bootstrapTheme = new Wt::WBootstrapTheme(this);
@@ -95,9 +95,9 @@ WebUIApplication::WebUIApplication(const WEnvironment &env)
   Wt::WMenu *topMenu = new Wt::WMenu(contentsStack, menuContainer);
   topMenu->addItem("System", new SystemTab(key_to_command,this));
   topMenu->addItem("DHCPConfigurator", new DHCPConfigurator(key_to_command,this));
-  topMenu->addItem("ThinClient infrastructure", new ThinclientTab(key_to_command,this));
+  topMenu->addItem("Thin-Client-Infrastruktur", new ThinclientTab(key_to_command,this));
 //  topMenu->addItem("iSCSITargets bearbeiten",new iSCSIConfigurator(key_to_command,this));
-  topMenu->addItem("monitoring",new MonitoringTab(key_to_command,this));
+//  topMenu->addItem("monitoring",new MonitoringTab(key_to_command,this));
   navigation->addMenu(topMenu);
 
 // Borderlayout
@@ -111,11 +111,15 @@ WebUIApplication::WebUIApplication(const WEnvironment &env)
 
 Wt::WWidget *WebUIApplication::content_south() {
   Wt::WContainerWidget *ContentContainer = new Wt::WContainerWidget();
-  Wt::WText *text = new Wt::WText("bottom");
-  ContentContainer->addWidget(text);
+  auto tbottom = new Wt::WTemplate(Wt::WString::tr("bottom"));
+  tbottom->bindString("text", "Ernst-Moritz-Arndt Universitaet Greifswald | Ansprechpartner: christian.schuldt@uni-greifswald.de ");
+  ContentContainer->addWidget(tbottom);
+  Wt::WImage *img = new Wt::WImage("approot/greifswald_logo.svg");
+  img->setAlternateText("Uni-Logo");
+  tbottom->bindWidget("img",img);
+  
   return ContentContainer;
 }
-
 
 // methode config file read
 void WebUIApplication::read_input_file(std::string filename) {

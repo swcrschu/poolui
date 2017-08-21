@@ -49,7 +49,7 @@ WPanel* new_host( HostEntry& entry, int host_id, WebUIApplication* application )
   auto tDHCP = new Wt::WTemplate(Wt::WString::tr("DHCP-template"));
   tDHCP->addFunction("id", &Wt::WTemplate::Functions::id);
   
-  tDHCP->bindString("hostname","Hostname:");
+  tDHCP->bindString("host","Hostname:");
   tDHCP->bindWidget("hostname", wtHostname);
   tDHCP->bindString("mac", "MAC-Adresse:");
   tDHCP->bindWidget("macadress",wtMac);
@@ -57,7 +57,7 @@ WPanel* new_host( HostEntry& entry, int host_id, WebUIApplication* application )
   tDHCP->bindWidget("root-path", wtrp);
   tDHCP->bindString("user", "Username:");
   tDHCP->bindWidget("username", wtUsername);
-  tDHCP->bindString("pass", "Password");
+  tDHCP->bindString("pass", "Password:");
   tDHCP->bindWidget("password", wtPassword);
   tDHCP->bindWidget("pbDelete", pbDelete);
 

@@ -30,6 +30,7 @@ struct SessionEntry {
 WPanel* sessioninfo(SessionEntry& entry, int session_id, WebUIApplication* application) {
   auto container = new WContainerWidget();
   auto panel = new WPanel();
+  panel->setWidth(800);
   panel->setStyleClass("panel-success");
   auto wtIqn = new WText(entry.iqn);
   auto wtSid = new WText(entry.sid);
@@ -148,6 +149,7 @@ iSCSIInfo::iSCSIInfo(map<string, string>& _key_to_command, WebUIApplication* _ap
     containerInfo->addWidget(wtSessions);
     auto infoPanel = new WPanel();
     infoPanel->setTitle("info");
+    infoPanel->setWidth(500);
     infoPanel->setStyleClass("panel-primary");
     infoPanel->setCentralWidget(containerInfo);
 

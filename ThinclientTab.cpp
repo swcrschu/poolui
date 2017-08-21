@@ -68,7 +68,7 @@ ThinclientTab::ThinclientTab(map<string, string> &_key_to_command,
   subMenu->addItem("iSCSI Info", new iSCSIInfo(key_to_command,application));
   subMenu->addItem("Target erstellen", content_ThinClient());
   subMenu->addItem("Target loeschen¶", new iSCSIConfigurator(key_to_command,application));
-  subMenu->addItem("Thinclient hinzufuegen", new ThinclientAdd(key_to_command,application));
+  subMenu->addItem("Thin Client hinzufuegen", new ThinclientAdd(key_to_command,application));
 
   subMenuContainer->addWidget(subMenu);
 

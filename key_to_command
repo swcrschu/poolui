@@ -18,8 +18,14 @@ dhcpregenerate sudo bash /$HOME/setup/regenerate_dhcp.sh
 iscsistop     sudo service iscsitarget stop
 iscsiregenerate sudo bash /$HOME/setup/regenerate_targets.sh
 iscsirestart  sudo service iscsitarget restart
+iscsistatus  sudo service iscsitarget status
 session	      cat /proc/net/iet/session
 volume	      cat /proc/net/iet/volume
+
+#tftp-Server
+tftpstatus    sudo service tftpd-hpa status
+tftprestart     sudo service tftpd-hpa restart
+tftpstop      sudo service tftpd-hpa stop
 
 #model / controller
 controller    bash /home/schuldtc/setup/controller.sh

@@ -146,7 +146,7 @@
    <form class="form-horizontal">
    
       <div class="form-group">
-	<label class="col-md-2 control-label" for="${id:hostname}">${hostname}</label>
+	<label class="col-md-2 control-label" for="${id:host}">${host}</label>
 	<div class="col-md-4">
 	  ${hostname}
 	</div>
@@ -311,7 +311,23 @@
       </div>
     </form>
   </message>
-
+  
+  <message id="bottom">
+   <form class="form-horizontal">
+   
+     <div class="form-group">
+       <div><hr /></div>
+	<div class="col-sm-offset-2 col-md-6">
+	   ${text} 
+	 </div>
+	 <div class="col-md-2">
+	   ${img}
+	 </div>
+       </div>
+    </form>
+  </message>
+   
+ 
 
  
   
